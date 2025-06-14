@@ -18,57 +18,65 @@ import waflib
 ###############################################################################
 
 one_file_programs = [
-	'dump_log.c',
+    'dump_log.c',
 ]
 
 def options(opt):
-	opt.load('gcc gxx')
-	
-	opt.add_option(
-		'--app',
-		dest = 'app',
-		default = None,
-		help = 'App to be run'
-	)
-	
+    opt.load('gcc gxx')
+    
+    opt.add_option(
+        '--app',
+        dest = 'app',
+        default = None,
+        help = 'App to be run'
+    )
+    
 def configure(cfg):
-	cfg.load('gcc gxx')
-	
-	cfg.env.append_value('CXXFLAGS', '-std=c++11')
-	#cfg.env.append_value('LIB', 'pthread')
-	cfg.env.append_value('CXXFLAGS', '-g -rdynamic'.split()) # For debug.
+    cfg.load('gcc gxx')
+    
+    cfg.env.append_value('CXXFLAGS', '-std=c++11')
+    #cfg.env.append_value('LIB', 'pthread')
+    cfg.env.append_value('CXXFLAGS', '-g -rdynamic'.split()) # For debug.
 
-	motor_ctrl_driver = cfg.srcnode.find_node(
-		'../../Driver/motor_ctrl/'
-	)
-	cfg.check(
-		uselib_store = 'motor_ctrl_driver',
-		msg = "Checking for stuff from 'motor_ctrl' driver",
-		header_name = 'motor_ctrl.h',
-		includes = str(motor_ctrl_driver.find_node('include')),
-		features = 'cxx cxxprogram',
-		mandatory = True
-	)
+    motor_ctrl_driver = cfg.srcnode.find_node('../../Driver/')
+
+    print(f"motor_ctrl_driver: {motor_ctrl_driver}")  # Dodaj ispis
+
+    if motor_ctrl_driver is None:
+        print("Greška: motor_ctrl_driver je None! Proveri putanju.")
+    else:
+        include_path = motor_ctrl_driver.find_node('include')
+        print(f"include_path: {include_path}")  # Još jedan ispis
+
+
+    cfg.check(
+        uselib_store = 'motor_ctrl_driver',
+        msg = "Checking for stuff from 'motor_ctrl' driver",
+        header_name = 'motor_ctrl.h',
+        includes = str(motor_ctrl_driver.find_node('include')),
+        features = 'cxx cxxprogram',
+        mandatory = True
+    )
 
 def build(bld):
-	for s in one_file_programs:
-		p, ext = os.path.splitext(s)
-		bld.program(
-			target = p,
-			source = s,
-			use = 'motor_ctrl_driver',
-			install_path = False
-		)
+    for s in one_file_programs:
+        p, ext = os.path.splitext(s)
+        bld.program(
+            target = p,
+            source = s,
+            use = 'motor_ctrl_driver',
+            install_path = False
+        )
 
 ###############################################################################
 
 def exec_command2(self, cmd, **kw):
-	# Log output while running command.
-	kw['stdout'] = None
-	kw['stderr'] = None
-	ret = self.exec_command(cmd, **kw)
-	if ret != 0:
-		self.fatal('Command "{}" returned {}'.format(cmd, ret))
+    # Log output while running command.
+    kw['stdout'] = None
+    kw['stderr'] = None
+    ret = self.exec_command(cmd, **kw)
+    if ret != 0:
+        self.fatal('Command "{}" returned {}'.format(cmd, ret))
 setattr(waflib.Context.Context, 'exec_command2', exec_command2)
 
 ###############################################################################

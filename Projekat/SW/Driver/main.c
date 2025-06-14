@@ -41,8 +41,11 @@ static ssize_t motor_ctrl_read(
 	log_t log_entry = {
 		.time = 0xbabadeda,
 		.idx = 101,
-		.on = 0
+		.on = 1
 	};
+
+	printk(KERN_INFO "LOG -> Time: 0x%x, Index: %d, On: %d\n",
+           log_entry.time, log_entry.idx, log_entry.on);
 	
 	if(copy_to_user(buf, (uint8_t*)&log_entry + *f_pos, len) != 0){
 		return -EFAULT;

@@ -21,6 +21,7 @@ int main(int argc, char** argv){
 
 	log_t log_entry;
 
+	int r;
 	r = read(fd, (char*)&log_entry, sizeof(log_entry));
 	if(r != sizeof(log_entry)){
 		fprintf(stderr, "ERROR: read went wrong!\n");
@@ -28,6 +29,17 @@ int main(int argc, char** argv){
 	}
 
 	//TODO write log as textual TSV (Tab Separated Value) file
+
+	FILE* f = fopen("log.tsv", "w");
+ 	if(f == NULL){
+  		printf("ERROR: Cannot open log.tsv for writing!\n");
+		return 4;
+	}
+
+	fprintf(f, "LOG -> Time: 0x%lx, Index: %d, On: %d\n",
+		log_entry.time, log_entry.idx, log_entry.on);
+
+	fclose(f);
 
 	//TODO seek if needed.
 

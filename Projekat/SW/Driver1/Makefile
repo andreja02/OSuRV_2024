@@ -13,7 +13,7 @@ DEST := /lib/modules/$(CURRENT)/kernel/$(MDIR)
 EXTRA_CFLAGS := -I$(PWD) -DDEV_MAJOR=$(DEV_MAJOR)
 
 obj-m := motor_ctrl.o
-motor_ctrl-objs := main.o pwm.o sw_pwm.o gpio.o
+motor_ctrl-objs := main.o
 
 .PHONY: default
 default: build

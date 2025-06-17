@@ -19,14 +19,23 @@ int main(int argc, char** argv){
 		return 4;
 	}
 
-	log_t log_entry;
+	
 
+	log_t log_entry[LOG_LEN];
+
+	
+	
 	int r;
-	r = read(fd, (char*)&log_entry, sizeof(log_entry));
-	if(r != sizeof(log_entry)){
-		fprintf(stderr, "ERROR: read went wrong!\n");
-		return 4;
-	}
+	//for (int i = 0; i < 3; i++){
+	//	printf("%d\n", r);
+		r = read(fd, (char*)log_entry, sizeof(log_entry));
+		
+		if(r != sizeof(log_entry)){
+			fprintf(stderr, "ERROR: read went wrong!\n");
+			return 4;
+		}
+	//}
+	
 
 	//TODO write log as textual TSV (Tab Separated Value) file
 
@@ -36,8 +45,10 @@ int main(int argc, char** argv){
 		return 4;
 	}
 
-	fprintf(f, "LOG -> Time: 0x%lx, Index: %d, On: %d\n",
-		log_entry.time, log_entry.idx, log_entry.on);
+	for (int i = 0; i < LOG_LEN; i++){
+		fprintf(f, "0x%lx	%d	%d\n",
+			log_entry[i].time, log_entry[i].idx, log_entry[i].on);
+		}
 
 	fclose(f);
 

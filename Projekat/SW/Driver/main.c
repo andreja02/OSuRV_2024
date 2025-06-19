@@ -66,11 +66,16 @@ static ssize_t motor_ctrl_read(
 	
 	size_t max_bytes = sizeof(log_t) * LOG_LEN;
 
+	//EOF
 	if (*f_pos >= max_bytes)
-		return 0; // EOF
+	{
+		return 0; 
+	}
 
 	if (len > max_bytes - *f_pos)
+	{
 		len = max_bytes - *f_pos;
+	}
 
 	if (copy_to_user(buf, ((uint8_t*)log) + *f_pos, len) != 0) {
 		return -EFAULT;

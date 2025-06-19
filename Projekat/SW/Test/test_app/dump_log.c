@@ -17,26 +17,19 @@ int main(int argc, char** argv){
 		fprintf(stderr, "ERROR: \"%s\" not opened!\n", DEV_FN);
 		fprintf(stderr, "fd = %d %s\n", fd, strerror(-fd));
 		return 4;
-	}
-
-	
+	}	
 
 	log_t log_entry[LOG_LEN];
 
-	
-	
 	int r;
-	//for (int i = 0; i < 3; i++){
-	//	printf("%d\n", r);
-		r = read(fd, (char*)log_entry, sizeof(log_entry));
-		
-		if(r != sizeof(log_entry)){
-			fprintf(stderr, "ERROR: read went wrong!\n");
-			return 4;
-		}
-	//}
 	
-
+	r = read(fd, (char*)log_entry, sizeof(log_entry));
+		
+	if(r != sizeof(log_entry)){
+		fprintf(stderr, "ERROR: read went wrong!\n");
+		return 4;
+	}
+	
 	//TODO write log as textual TSV (Tab Separated Value) file
 
 	FILE* f = fopen("log.tsv", "w");

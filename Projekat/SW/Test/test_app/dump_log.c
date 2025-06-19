@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 	}
 
 	for (int i = 0; i < LOG_LEN; i++){
-		fprintf(f, "0x%lx	%d	%d\n",
+		fprintf(f, "0x%lx\t%d\t%d\n",
 			log_entry[i].time, log_entry[i].idx, log_entry[i].on);
 		}
 
